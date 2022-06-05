@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_vote/models/election.dart';
+import 'package:app_vote/models/winner.dart';
 import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -18,6 +19,18 @@ class CoreAPI {
     final elecs = (elections as List).map((e) => Election.fromJson(e)).toList();
     print(elecs);
     return elecs;
+  }
+
+  static Future<Winner> getResult(Election election) async {
+    final url = Uri.parse('http://43.204.209.119:4000/winner');
+
+    final response = await http.post(url,
+        body: {'election': election.name},
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'});
+    print(response.body);
+    final resp = json.decode(response.body);
+    final winner = Winner.fromJson(resp[0]);
+    return winner;
   }
 
   static Future<List<Candidate>> getCandidates() async {

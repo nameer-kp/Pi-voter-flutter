@@ -1,6 +1,7 @@
 import 'package:app_vote/api/core_api.dart';
 import 'package:app_vote/models/candidate.dart';
 import 'package:app_vote/models/election.dart';
+import 'package:app_vote/result_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:app_vote/camera_page.dart';
@@ -12,7 +13,20 @@ class CandidatesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Candidates')),
+      appBar: AppBar(
+        title: Text('Candidates'),
+        actions: [
+          TextButton(
+            onPressed: election.ongoing
+                ? null
+                : () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ResultPage(election: election)));
+                  },
+            child: Text('View Result'),
+          ),
+        ],
+      ),
       body: Center(
         child: FutureBuilder<List<Candidate>>(
           future: CoreAPI.getCandidates(),
@@ -22,6 +36,7 @@ class CandidatesPage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
+            print(snapshot.data);
             if (snapshot.hasError || snapshot.data == null)
               return Text('Somethinfg went wrong please try again later');
             final candidates = snapshot.data!;
