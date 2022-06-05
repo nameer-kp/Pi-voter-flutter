@@ -1,9 +1,9 @@
-import 'package:app_vote/candidates.dart';
+import 'package:app_vote/candidates_page.dart';
 import 'package:app_vote/electionList.dart';
 import 'package:app_vote/face.dart';
 import 'package:flutter/material.dart';
 
-import 'homepage.dart';
+import 'auth_page.dart';
 
 class PhoneNumber extends StatefulWidget {
   @override
@@ -19,16 +19,16 @@ class _PhoneNumberState extends State<PhoneNumber> {
   }
 
   final List _children = [
-    HomePage(),
+    AuthPage(),
     FaceId(),
     ElectionList(),
-    Candidates(),
+    // CandidatesPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo,
+      // backgroundColor: Colors.indigo,
       appBar: AppBar(
         backgroundColor: Colors.indigo,
         title: Text(
