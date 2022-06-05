@@ -1,9 +1,13 @@
+import 'package:app_vote/api/core_api.dart';
+import 'package:app_vote/models/candidate.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
-  const CameraPage({this.cameras, Key? key}) : super(key: key);
+  final Candidate candidate;
+  const CameraPage({this.cameras, Key? key, required this.candidate})
+      : super(key: key);
 
   @override
   _CameraPageState createState() => _CameraPageState();
@@ -60,16 +64,19 @@ class _CameraPageState extends State<CameraPage> {
           child: ElevatedButton(
             onPressed: () async {
               pictureFile = await controller.takePicture();
+              if (pictureFile != null) {
+                CoreAPI.sendImage(pictureFile!, widget.candidate);
+              }
               setState(() {});
             },
             child: const Text('Capture Image'),
           ),
         ),
-        if (pictureFile != null)
-          Image.network(
-            pictureFile!.path,
-            height: 200,
-          )
+        // if (pictureFile != null)
+        //   Image.network(
+        //     pictureFile!.path,
+        //     height: 200,
+        //   )
         //Android/iOS
         // Image.file(File(pictureFile!.path)))
       ],
