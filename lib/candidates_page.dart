@@ -29,7 +29,7 @@ class CandidatesPage extends StatelessWidget {
       ),
       body: Center(
         child: FutureBuilder<List<Candidate>>(
-          future: CoreAPI.getCandidates(),
+          future: CoreAPI.getCandidates(election.name),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -55,13 +55,14 @@ class CandidatesPage extends StatelessWidget {
                             builder: (context) => CameraPage(
                               cameras: value,
                               candidate: candidate,
+                              
                             ),
                           ),
                         ),
                       );
                     },
                     leading: Image.network(
-                        'https://source.unsplash.com/random?sig=index'),
+                        'https://bvoter.s3.ap-south-1.amazonaws.com/'+candidate.candidateId+'.jpg'),
                     title: Text(candidate.name),
                     subtitle: Text(
                       'Party Name: ' + candidate.partyName,

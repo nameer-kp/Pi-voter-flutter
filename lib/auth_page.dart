@@ -66,12 +66,14 @@ class _AuthPageState extends State<AuthPage> {
             ),
             Container(
               padding: const EdgeInsets.only(bottom: 60),
+              
               child: MaterialButton(
                 onPressed: () async {
                   if (!hasSentOTP) {
                     final response =
                         await _twilioPhoneVerify.sendSmsCode('+91' + phoneNo);
                     print(response.errorMessage);
+                    
                     print(response.successful);
                     if (response.successful != null && response.successful!) {
                       Navigator.of(context).push(

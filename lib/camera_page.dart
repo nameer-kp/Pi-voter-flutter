@@ -2,6 +2,7 @@ import 'package:app_vote/api/core_api.dart';
 import 'package:app_vote/models/candidate.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CameraPage extends StatefulWidget {
   final List<CameraDescription>? cameras;
@@ -21,8 +22,9 @@ class _CameraPageState extends State<CameraPage> {
   void initState() {
     super.initState();
     controller = CameraController(
-      widget.cameras![0],
-      ResolutionPreset.max,
+      widget.cameras![1],
+      ResolutionPreset.medium,
+      imageFormatGroup: ImageFormatGroup.jpeg,
     );
     controller.initialize().then((_) {
       if (!mounted) {
@@ -62,10 +64,19 @@ class _CameraPageState extends State<CameraPage> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
+            // onPressed: () async {
+            //   pictureFile = await controller.takePicture();
+            //   if (pictureFile != null) {
+            //     CoreAPI.sendImage(pictureFile!, widget.candidate);
+            //   }
+            //   setState(() {});
+            // },
+
             onPressed: () async {
-              pictureFile = await controller.takePicture();
-              if (pictureFile != null) {
-                CoreAPI.sendImage(pictureFile!, widget.candidate);
+              XFile? pickedFile = await ImagePicker().pickImage(
+                  source: ImageSource.camera, maxHeight: 1080, maxWidth: 1080);
+              if (pickedFile != null) {
+                CoreAPI.sendImage(pickedFile!, widget.candidate);
               }
               setState(() {});
             },

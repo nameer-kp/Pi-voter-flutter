@@ -10,11 +10,11 @@ class User {
     this.phoneNumber = '',
   });
 
-  static User fromJson(Map<String, dynamic> json, String docId) => User(
-        userId: json['userId'],
-        name: json['name'],
+  static User fromJson(Map<String, dynamic> json) => User(
+        userId: json['voter_id'],
+        name: json['voter_name'],
         age: json['age'] ?? '',
-        phoneNumber: json['phoneNumber'] ?? '',
+        phoneNumber: json['mobile'] ?? '',
       );
 
   Map<String, dynamic> toJson() => {

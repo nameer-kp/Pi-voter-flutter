@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:app_vote/models/election.dart';
+import 'package:app_vote/models/user.dart';
 import 'package:app_vote/models/winner.dart';
 import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../models/candidate.dart';
 
@@ -33,9 +36,20 @@ class CoreAPI {
     return winner;
   }
 
-  static Future<List<Candidate>> getCandidates() async {
+  static Future<User> getVoter(String mobile) async {
+    print("Runnning getVoter");
+    final url = 'http://43.204.209.119:4000/getvoter?mobile=' + mobile;
+    final response = await http.get(Uri.parse(url));
+    print(response.body);
+    final resp = json.decode(response.body);
+    final user = User.fromJson(resp[0]);
+    return user;
+  }
+
+  static Future<List<Candidate>> getCandidates(String electionName) async {
     print("Runnning upoload");
-    final url = 'http://43.204.209.119:4000/candidatetableview';
+    final url =
+        'http://43.204.209.119:4000/candidateview?election=' + electionName;
     final response = await http.get(Uri.parse(url));
     print(response.body);
     final candi = json.decode(response.body);
@@ -46,40 +60,29 @@ class CoreAPI {
     return candidates;
   }
 
-  static Future sendImage(XFile imageFile, Candidate candidate) async {
+  static Future sendImage(
+    // need User voter 
+      XFile imageFile, Candidate candidate) async {
     var dio = Dio();
     final imageBytes = await imageFile.readAsBytes();
-    final url = 'http://43.204.209.119:5000/facesvc';
+    final url = 'http://43.204.209.119:5000/facesvc/';
     final formData = FormData.fromMap({
-      "candidate": "6699",
-      "voterId": "7799",
-      // "imagefile": MultipartFile.fromBytes(imageBytes),
+      "candidateid": candidate.candidateId,
+      "voterid": "7799",
+      "imagefile": await MultipartFile.fromFile(
+        imageFile.path,
+        filename: imageFile.name,
+        contentType:
+            new MediaType("image", "jpeg"), // Here we add the content type!
+      ),
     });
-    final response = await dio.post(url, data: formData);
+    print(imageFile.path);
+    final response = await dio.post(url,
+        data: formData,
+        options: Options(headers: {
+          "Content-Type": 'multipart/form-data',
+        }));
     print(response.data);
-    // final imageBytes = await imageFile.readAsBytes();
-    // final request = http.MultipartRequest("POST", Uri.parse(url));
-    // request.fields['candidate'] = '6699';
-    // request.fields['voterId'] = '7799';
-    // request.files.add(http.MultipartFile.fromBytes(
-    //   'imagefile',
-    //   imageBytes,
-    // ));
-
-    // request.send().then((response) {
-    //   print("sent");
-    //   if (response.statusCode == 200) print("Uploaded!");
-    // });
-    // final map = {};
-    // map['imagefile'] = imageBytes.toString();
-    // map['candidateid'] = "6699";
-    // map['voterId'] = "7799";
-    // final response = await http.post(Uri.parse(url), body: map);
-    // print(response.body);
-
-//     imagefile
-// voterid
-// candidateid
-// {error:false}
+   
   }
 }
