@@ -1,4 +1,6 @@
 import 'package:app_vote/api/core_api.dart';
+import 'package:app_vote/face_error.dart';
+import 'package:app_vote/final_route.dart';
 import 'package:app_vote/models/candidate.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -49,39 +51,36 @@ class _CameraPageState extends State<CameraPage> {
         ),
       );
     }
-    return Column(
-      children: [
-
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child:ElevatedButton(
-            // onPressed: () async {
-            //   pictureFile = await controller.takePicture();
-            //   if (pictureFile != null) {
-            //     CoreAPI.sendImage(pictureFile!, widget.candidate);
-            //   }
-            //   setState(() {});
-            // },
-
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Face Recognition'),
+      ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints.tightFor(width: 300, height: 200),
+          child: ElevatedButton(
+            child: const Text('Capture Face'),
             onPressed: () async {
               XFile? pickedFile = await ImagePicker().pickImage(
                   source: ImageSource.camera, maxHeight: 1920, maxWidth: 1080);
               if (pickedFile != null) {
-                CoreAPI.sendImage(pickedFile!, widget.candidate);
+                if (await CoreAPI.sendImage(pickedFile!, widget.candidate)!='true'){
+                    (Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const FinalRoute())));
+                }else{
+                 Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const FaceError(candidate:widget.candidate))); 
+                }
               }
               setState(() {});
             },
-            child: const Text('Capture Image'),
           ),
-        )
-        // if (pictureFile != null)
-        //   Image.network(
-        //     pictureFile!.path,
-        //     height: 200,
-        //   )
-        //Android/iOS
-        // Image.file(File(pictureFile!.path)))
-      ],
+        ),
+      ),
     );
   }
-}
+    
+  }
+

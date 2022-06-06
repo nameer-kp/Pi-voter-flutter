@@ -1,6 +1,5 @@
 import 'package:app_vote/candidates_page.dart';
 import 'package:app_vote/electionList.dart';
-import 'package:app_vote/face.dart';
 import 'package:flutter/material.dart';
 
 import 'auth_page.dart';
@@ -20,7 +19,6 @@ class _PhoneNumberState extends State<PhoneNumber> {
 
   final List _children = [
     AuthPage(),
-    FaceId(),
     ElectionList(),
     // CandidatesPage(),
   ];

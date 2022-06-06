@@ -60,7 +60,7 @@ class CoreAPI {
     return candidates;
   }
 
-  static Future sendImage(
+  static Future <String> sendImage(
     // need User voter 
       XFile imageFile, Candidate candidate) async {
     var dio = Dio();
@@ -82,7 +82,8 @@ class CoreAPI {
         options: Options(headers: {
           "Content-Type": 'multipart/form-data',
         }));
-    print(response.data);
-   
+    
+    print(jsonDecode(response.data['error']));
+    return jsonDecode(response.data['error']);
   }
 }
