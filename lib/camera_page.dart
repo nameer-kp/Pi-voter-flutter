@@ -51,19 +51,10 @@ class _CameraPageState extends State<CameraPage> {
     }
     return Column(
       children: [
+
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: SizedBox(
-              height: 400,
-              width: 400,
-              child: CameraPreview(controller),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
+          child:ElevatedButton(
             // onPressed: () async {
             //   pictureFile = await controller.takePicture();
             //   if (pictureFile != null) {
@@ -74,7 +65,7 @@ class _CameraPageState extends State<CameraPage> {
 
             onPressed: () async {
               XFile? pickedFile = await ImagePicker().pickImage(
-                  source: ImageSource.camera, maxHeight: 1080, maxWidth: 1080);
+                  source: ImageSource.camera, maxHeight: 1920, maxWidth: 1080);
               if (pickedFile != null) {
                 CoreAPI.sendImage(pickedFile!, widget.candidate);
               }
@@ -82,7 +73,7 @@ class _CameraPageState extends State<CameraPage> {
             },
             child: const Text('Capture Image'),
           ),
-        ),
+        )
         // if (pictureFile != null)
         //   Image.network(
         //     pictureFile!.path,
