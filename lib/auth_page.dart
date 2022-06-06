@@ -1,4 +1,6 @@
+import 'package:app_vote/api/core_api.dart';
 import 'package:app_vote/code_verify_page.dart';
+import 'package:app_vote/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:twilio_phone_verify/twilio_phone_verify.dart';
@@ -66,20 +68,41 @@ class _AuthPageState extends State<AuthPage> {
             ),
             Container(
               padding: const EdgeInsets.only(bottom: 60),
-              
               child: MaterialButton(
                 onPressed: () async {
                   if (!hasSentOTP) {
+                    // "voter_name":"nameertest3","mobile":"9074685320","voter_id":"7799","age":43}
+                    final user = User(
+                        userId: "7799",
+                        name: "nameertest3",
+                        age: 43,
+                        phoneNumber: "9074685320");
+                    var voter;
+                    try {
+                      voter = await CoreAPI.getVoter(phoneNo);
+                    } on Exception catch (e) {
+                      print(e);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('No user found, please try agin'),
+                        ),
+                      );
+                      return;
+                    }
                     final response =
                         await _twilioPhoneVerify.sendSmsCode('+91' + phoneNo);
+
                     print(response.errorMessage);
-                    
                     print(response.successful);
+                    print(response.statusCode);
+                    print(response.verification.toString());
                     if (response.successful != null && response.successful!) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) =>
-                              CodeVerifyPage(phoneNo: phoneNo),
+                          builder: (context) => CodeVerifyPage(
+                            phoneNo: phoneNo,
+                            voter: user,
+                          ),
                         ),
                       );
                     } else {

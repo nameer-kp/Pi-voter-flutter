@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: const AuthPage(),
-      home: const ElectionList(),
+      home: const AuthPage(),
+      // home: const ElectionList(),
       theme: ThemeData(brightness: Brightness.dark),
     );
   }

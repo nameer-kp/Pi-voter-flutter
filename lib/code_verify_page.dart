@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_vote/config.dart';
 import 'package:app_vote/electionList.dart';
+import 'package:app_vote/models/user.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:twilio_phone_verify/twilio_phone_verify.dart';
@@ -9,7 +10,9 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 
 class CodeVerifyPage extends StatefulWidget {
   final String phoneNo;
-  const CodeVerifyPage({Key? key, required this.phoneNo}) : super(key: key);
+  final User voter;
+  const CodeVerifyPage({Key? key, required this.phoneNo, required this.voter})
+      : super(key: key);
 
   @override
   State<CodeVerifyPage> createState() => _CodeVerifyPageState();
@@ -264,7 +267,9 @@ class _CodeVerifyPageState extends State<CodeVerifyPage> {
         print('Phone number is approved');
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => const ElectionList(),
+              builder: (context) => ElectionList(
+                voter: widget.voter,
+              ),
             ),
             (route) => route.isFirst);
       } else {

@@ -6,9 +6,13 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:app_vote/camera_page.dart';
 
+import 'models/user.dart';
+
 class CandidatesPage extends StatelessWidget {
   final Election election;
-  const CandidatesPage({Key? key, required this.election}) : super(key: key);
+  final User voter;
+  const CandidatesPage({Key? key, required this.election, required this.voter})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,7 @@ class CandidatesPage extends StatelessWidget {
             }
             print(snapshot.data);
             if (snapshot.hasError || snapshot.data == null)
-              return Text('Somethinfg went wrong please try again later');
+              return Text('Something went wrong please try again later');
             final candidates = snapshot.data!;
             return ListView.separated(
               separatorBuilder: ((context, index) => Divider()),
@@ -53,16 +57,18 @@ class CandidatesPage extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => CameraPage(
+                              voter: voter,
                               cameras: value,
                               candidate: candidate,
-                              
                             ),
                           ),
                         ),
                       );
                     },
                     leading: Image.network(
-                        'https://bvoter.s3.ap-south-1.amazonaws.com/'+candidate.candidateId+'.jpg'),
+                        'https://bvoter.s3.ap-south-1.amazonaws.com/' +
+                            candidate.candidateId +
+                            '.jpg'),
                     title: Text(candidate.name),
                     subtitle: Text(
                       'Party Name: ' + candidate.partyName,

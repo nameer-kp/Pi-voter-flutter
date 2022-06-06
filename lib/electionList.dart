@@ -1,10 +1,12 @@
 import 'package:app_vote/api/core_api.dart';
 import 'package:app_vote/candidates_page.dart';
 import 'package:app_vote/models/election.dart';
+import 'package:app_vote/models/user.dart';
 import 'package:flutter/material.dart';
 
 class ElectionList extends StatelessWidget {
-  const ElectionList({Key? key}) : super(key: key);
+  final User voter;
+  const ElectionList({Key? key, required this.voter}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class ElectionList extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => CandidatesPage(
                           election: election,
+                          voter: voter,
                         ),
                       ),
                     );

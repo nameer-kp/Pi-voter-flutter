@@ -42,7 +42,11 @@ class CoreAPI {
     final response = await http.get(Uri.parse(url));
     print(response.body);
     final resp = json.decode(response.body);
+    if (resp is Map && resp['error'] != null && resp['error'] == true) {
+      throw Exception();
+    }
     final user = User.fromJson(resp[0]);
+    print("User fetched");
     return user;
   }
 
@@ -60,15 +64,14 @@ class CoreAPI {
     return candidates;
   }
 
-  static Future <String> sendImage(
-    // need User voter 
-      XFile imageFile, Candidate candidate) async {
+  static Future<bool> sendImage(
+      User voter, XFile imageFile, Candidate candidate) async {
     var dio = Dio();
     final imageBytes = await imageFile.readAsBytes();
     final url = 'http://43.204.209.119:5000/facesvc/';
     final formData = FormData.fromMap({
       "candidateid": candidate.candidateId,
-      "voterid": "7799",
+      "voterid": voter.userId,
       "imagefile": await MultipartFile.fromFile(
         imageFile.path,
         filename: imageFile.name,
@@ -82,8 +85,13 @@ class CoreAPI {
         options: Options(headers: {
           "Content-Type": 'multipart/form-data',
         }));
-    
-    print(jsonDecode(response.data['error']));
-    return jsonDecode(response.data['error']);
+    print(response.data);
+    print(response.runtimeType);
+    // final resp = jsonDecode(response.data);
+    // print(resp);
+    // print(resp.runtimeType);
+    final hasError = response.data['error'];
+    print(hasError);
+    return hasError;
   }
 }
